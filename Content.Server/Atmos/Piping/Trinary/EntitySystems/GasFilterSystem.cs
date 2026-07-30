@@ -123,8 +123,9 @@ namespace Content.Server.Atmos.Piping.Trinary.EntitySystems
                 inletGasMixture.Pressure * transferVolume / (inletGasMixture.Temperature * Atmospherics.R);
 
             // Calculate how many moles can outlet still contain
-            float molesSpaceLeft = (Atmospherics.MaxOutputPressure - outletNode.Air.Pressure) * outletNode.Air.Volume /
-                                   (outletNode.Air.Temperature * Atmospherics.R);
+            float molesSpaceLeft = outletNode.Air.Temperature > 0.0 ? (Atmospherics.MaxOutputPressure - outletNode.Air.Pressure) * outletNode.Air.Volume /
+                                   (outletNode.Air.Temperature * Atmospherics.R) : (Atmospherics.MaxOutputPressure - outletNode.Air.Pressure) * outletNode.Air.Volume /
+                                   (inletGasMixture.Temperature * Atmospherics.R);
 
             // Get the lower value of the two, and clamp it to the transfer rate
             float actualMolesTransfered = Math.Clamp(transferMoles, 0, Math.Max(0, molesSpaceLeft));
